@@ -2,7 +2,6 @@ package com.soumyaranjanmohanty.blog.services;
 
 import java.util.List;
 
-import com.soumyaranjanmohanty.blog.entites.About;
 import com.soumyaranjanmohanty.blog.payloads.AboutDto;
 
 public interface AboutService {
