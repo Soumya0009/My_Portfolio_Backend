@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class AboutDto {
+	private Integer id;
 	
 	@NotEmpty
 	private String content;

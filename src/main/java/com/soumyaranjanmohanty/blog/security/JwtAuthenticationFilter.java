@@ -12,6 +12,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,34 +31,41 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String requestTokenHeader = request.getHeader("Authorization");
+        final String requestTokenHeader = request.getHeader("Authorization");
         String username = null;
         String token = null;
 
+        // Check for Authorization header
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
-            token = requestTokenHeader.substring(7);
+            token = requestTokenHeader.substring(7); // Extract JWT token
             try {
-                username = jwtTokenHelper.getUsernameFromToken(token);
+                username = jwtTokenHelper.getUsernameFromToken(token); // Extract username
             } catch (IllegalArgumentException e) {
-                System.out.println("Unable to get JWT Token");
+                logger.error("Unable to get JWT Token", e);
             } catch (ExpiredJwtException e) {
-                System.out.println("JWT Token has expired");
+                logger.warn("JWT Token has expired", e);
             } catch (MalformedJwtException e) {
-                System.out.println("Invalid JWT Token");
+                logger.error("Invalid JWT Token", e);
+            } catch (SignatureException e) {
+                logger.error("Invalid JWT signature", e);
             }
+        } else if (requestTokenHeader != null) {
+            logger.warn("JWT Token does not begin with Bearer String");
         } else {
-            System.out.println("JWT Token does not begin with Bearer String");
+            logger.debug("Authorization header is missing");
         }
 
-        // Once we get the token, validate it
+        // If the token is valid, set up authentication
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
             if (jwtTokenHelper.validateToken(token, userDetails)) {
-                // Set the authentication in the context
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
+                authentication.setDetails(request);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+            } else {
+                logger.warn("JWT Token validation failed");
             }
         }
 

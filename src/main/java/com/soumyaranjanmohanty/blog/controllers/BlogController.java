@@ -106,7 +106,7 @@ public class BlogController {
 		@PreAuthorize("hasRole('ADMIN')")
 		@PostMapping("/blog/image/upload/{blogId}")
 		public ResponseEntity<BlogDto> uploadBlogImage(
-		        @RequestParam MultipartFile image,
+		        @RequestParam("image") MultipartFile image,
 		        @PathVariable Integer blogId) throws IOException {
 
 		    String fileName = this.fileService.uploadImage(path, image);

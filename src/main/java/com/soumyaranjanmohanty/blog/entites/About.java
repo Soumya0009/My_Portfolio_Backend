@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -25,7 +26,8 @@ public class About {
 	@Column(name = "id")
 	private Integer aboutID;
 	
-	@Column(name = "about_content", length = 2500, nullable = false)
+	@Lob
+	@Column(name = "about_content", columnDefinition = "LONGTEXT", nullable = false)
 	private String content;
 	
 	private String ImageName;

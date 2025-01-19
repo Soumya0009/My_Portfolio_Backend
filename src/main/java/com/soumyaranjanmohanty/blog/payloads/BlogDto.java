@@ -12,6 +12,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class BlogDto {
 	
+	private Integer blogId;
+	
 	@NotEmpty
 	private String title;
 	

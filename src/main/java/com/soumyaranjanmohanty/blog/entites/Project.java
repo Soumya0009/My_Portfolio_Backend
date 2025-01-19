@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -28,7 +29,8 @@ public class Project {
 	@Column(name = "project_title", length = 1000, nullable = false)
 	private String title;
 	
-	@Column(name = "project_content", length = 5000, nullable = false)
+	@Lob
+	@Column(name = "project_content", columnDefinition = "LONGTEXT" ,nullable = false)
 	private String content;
 	
 	private String ImageName;

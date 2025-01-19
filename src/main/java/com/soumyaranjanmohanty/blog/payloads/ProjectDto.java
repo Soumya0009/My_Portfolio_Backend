@@ -12,6 +12,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ProjectDto {
 	
+	private Integer projectID;
+	
 	@NotEmpty
 	private String title;
 	
