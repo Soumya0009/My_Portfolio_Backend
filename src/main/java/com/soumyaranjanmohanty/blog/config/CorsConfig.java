@@ -14,7 +14,7 @@ public class CorsConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/images/**")
+        registry.addMapping("/**")
                 .allowedOrigins(frontendUrl)  // Uses the value from application.properties
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
